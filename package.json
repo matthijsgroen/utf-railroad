@@ -1,0 +1,17 @@
+{
+  "name": "ascii-railroad",
+  "version": "1.0.0",
+  "description": "ascii railroad diagrams",
+  "main": "index.js",
+  "author": "Matthijs Groen <matthijs.groen@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "jest": "^26.5.3",
+    "prettier": "^2.1.2"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
