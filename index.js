@@ -85,12 +85,14 @@ const alignWidth = (plotter, element, { x, y }, width) => {
   }
 };
 
-const skip = () => ({
+const skip = (content = "") => ({
   up: 0,
   down: 0,
   height: 0,
-  width: 0,
-  draw: () => {}
+  width: content.length,
+  draw: (plotter, start) => {
+    drawLine(plotter, start, content);
+  }
 });
 
 const choice = (elements, defaultChoice = 0) => {
@@ -200,7 +202,7 @@ const choice = (elements, defaultChoice = 0) => {
   };
 };
 
-const optional = element => choice([skip(), element], 1);
+const optional = element => choice([skip("→"), element], 1);
 
 const stack = elements => {
   const up = elements[0].up;
@@ -234,8 +236,12 @@ const stack = elements => {
         if (i < l.length - 1) {
           alignWidth(
             plotter,
-            skip(),
-            delta(start, 1, yDelta + element.height + element.down + 2),
+            skip("←"),
+            delta(
+              start,
+              1,
+              yDelta + element.up + element.height + element.down + 1
+            ),
             width
           );
           plotter(
@@ -258,22 +264,14 @@ const stack = elements => {
         }
 
         if (i > 0) {
-          plotter(
-            start.x,
-            start.y + yDelta - element.up, // + element.down + element.height + yDelta + 1,
-            "╭"
-          );
+          plotter(start.x, start.y + yDelta - 1, "╭");
           for (let y = 0; y < element.up; y++) {
-            plotter(start.x, start.y + yDelta - y, "│");
+            plotter(start.x, start.y + yDelta + y, "│");
           }
           plotter(start.x, start.y + yDelta + element.up, "╰");
         }
 
-        yDelta += element.height + element.down;
-        if (l[i + i]) {
-          yDelta += l[i + i].up;
-        }
-        yDelta += 2;
+        yDelta += element.up + element.height + 2 + element.down;
       });
       plotter(start.x + width + 1, start.y + height, "─");
     }
@@ -325,6 +323,13 @@ const draw = element => {
   return canvas.map(l => l.join("")).join("\n");
 };
 
+// Since there are no chars with arcs and lines (despite the fact that UTF 8 is extensive)
+// a choice and repeater would look the same
+const repeater = (repeat, inBetween = skip()) => choice([repeat, inBetween]);
+
+// TODO:
+// - Horizontal choice
+
 console.log(
   draw(
     diagram(
@@ -332,10 +337,14 @@ console.log(
         terminal("foo"),
         stack([
           sequence([nonTerminal("hello"), terminal("nice")]),
-          nonTerminal("world"),
-          terminal("how are you?")
-        ]),
-        terminal("qux")
+          choice(
+            [nonTerminal("mars"), nonTerminal("world"), nonTerminal("moon")],
+            1
+          ),
+          terminal("how are you?"),
+          optional(terminal("how are you?"))
+        ])
+        //repeater(terminal("qux"))
       ]),
       true
     )
