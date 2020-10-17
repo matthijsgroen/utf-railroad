@@ -17,11 +17,11 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "sourceRoot": "./ascii-diagram.ts",
+    "sourceRoot": "./utf-railroad.ts",
     "baseUrl": "./",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["ascii-railroad.ts"]
+  "files": ["utf-railroad.ts"]
 }

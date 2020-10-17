@@ -1,4 +1,4 @@
-import { terminal, draw, nonTerminal, diagram } from "../ascii-diagram";
+import { terminal, draw, nonTerminal, diagram } from "../utf-railroad";
 
 describe("complex diagram", () => {
   it("renders a start and end to a shape", () => {

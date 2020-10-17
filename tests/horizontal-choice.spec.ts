@@ -1,4 +1,4 @@
-import { draw, horizontalChoice, terminal, stack } from "../ascii-railroad";
+import { draw, horizontalChoice, terminal, stack } from "../utf-railroad";
 
 describe("horizontalChoice", () => {
   it("can render a single item", () => {

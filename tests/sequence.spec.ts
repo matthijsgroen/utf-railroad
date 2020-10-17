@@ -1,4 +1,4 @@
-import { draw, sequence, stack, terminal } from "../ascii-diagram";
+import { draw, sequence, stack, terminal } from "../utf-railroad";
 
 describe("sequence", () => {
   it("can render a single element", () => {

@@ -1,4 +1,4 @@
-import { draw, stack, choice, terminal } from "../ascii-diagram";
+import { draw, stack, choice, terminal } from "../utf-railroad";
 
 describe("stack", () => {
   it("can render a single item", () => {

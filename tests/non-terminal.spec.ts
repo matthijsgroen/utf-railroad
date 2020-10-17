@@ -1,4 +1,4 @@
-import { draw, nonTerminal } from "../ascii-diagram";
+import { draw, nonTerminal } from "../utf-railroad";
 
 describe("nonTerminal", () => {
   it("renders a box with a thick line", () => {

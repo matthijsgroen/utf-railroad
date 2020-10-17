@@ -1,9 +1,9 @@
 {
-  "name": "ascii-railroad",
+  "name": "utf-railroad",
   "version": "1.0.0",
-  "description": "ascii railroad diagrams",
-  "main": "ascii-railroad.js",
-  "types": "ascii-railroad.d.ts",
+  "description": "utf railroad diagrams",
+  "main": "utf-railroad.js",
+  "types": "utf-railroad.d.ts",
   "author": "Matthijs Groen <matthijs.groen@gmail.com>",
   "license": "MIT",
   "private": false,
@@ -19,8 +19,8 @@
     "typescript": "^4.0.3"
   },
   "files": [
-    "ascii-railroad.js",
-    "ascii-railroad.d.ts",
+    "utf-railroad.js",
+    "utf-railroad.d.ts",
     "README.md"
   ],
   "scripts": {
