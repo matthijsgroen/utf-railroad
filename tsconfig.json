@@ -23,5 +23,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["ascii-diagram.ts"]
+  "files": ["ascii-railroad.ts"]
 }

@@ -1,4 +1,4 @@
-import { draw, optional, terminal } from "../ascii-diagram";
+import { draw, optional, terminal } from "../ascii-railroad";
 
 describe("optional", () => {
   it("adds a skip line", () => {

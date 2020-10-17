@@ -2,8 +2,8 @@
   "name": "ascii-railroad",
   "version": "1.0.0",
   "description": "ascii railroad diagrams",
-  "main": "ascii-diagram.js",
-  "types": "ascii-diagram.d.ts",
+  "main": "ascii-railroad.js",
+  "types": "ascii-railroad.d.ts",
   "author": "Matthijs Groen <matthijs.groen@gmail.com>",
   "license": "MIT",
   "private": false,
@@ -19,8 +19,8 @@
     "typescript": "^4.0.3"
   },
   "files": [
-    "ascii-diagram.js",
-    "ascii-diagram.d.ts",
+    "ascii-railroad.js",
+    "ascii-railroad.d.ts",
     "README.md"
   ],
   "scripts": {

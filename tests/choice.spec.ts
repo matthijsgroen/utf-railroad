@@ -1,4 +1,4 @@
-import { draw, choice, terminal, stack } from "../ascii-diagram";
+import { draw, choice, terminal, stack } from "../ascii-railroad";
 
 describe("choice", () => {
   it("can render a single item", () => {

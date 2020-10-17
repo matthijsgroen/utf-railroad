@@ -1,4 +1,4 @@
-import { draw, repeater, terminal } from "../ascii-diagram";
+import { draw, repeater, terminal } from "../ascii-railroad";
 
 describe("repeater", () => {
   it("can repeat single item", () => {
