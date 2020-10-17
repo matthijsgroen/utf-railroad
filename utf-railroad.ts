@@ -56,6 +56,39 @@ const nonTerminal = (name: string): DiagramElement => ({
   },
 });
 
+const special = (name: string): DiagramElement => ({
+  up: 1,
+  down: 1,
+  height: 0,
+  width: name.length + 4,
+  draw: (plotter, start) => {
+    drawLine(plotter, delta(start, 0, -1), `╭${"┄".repeat(name.length + 2)}╮`);
+    drawLine(plotter, start, `┤ ${name} ├`);
+    drawLine(plotter, delta(start, 0, 1), `╰${"┄".repeat(name.length + 2)}╯`);
+  },
+});
+
+const comment = (comment: string): DiagramElement => ({
+  up: 0,
+  down: 0,
+  height: 0,
+  width: comment.length + 4,
+  draw: (plotter, start) => {
+    drawLine(plotter, start, `─ ${comment} ─`);
+  },
+});
+
+const commentWithLine = (comment: string): DiagramElement => ({
+  up: 1,
+  down: 0,
+  height: 0,
+  width: comment.length + 2,
+  draw: (plotter, start) => {
+    drawLine(plotter, delta(start, 0, -1), ` ${comment} `);
+    drawLine(plotter, start, "─".repeat(comment.length + 2));
+  },
+});
+
 const diagram = (element: DiagramElement, complex = false): DiagramElement => ({
   up: 0 + element.up,
   down: 0 + element.down + element.height,
@@ -450,6 +483,8 @@ const draw = (element: DiagramElement) => {
 
 export {
   choice,
+  comment,
+  commentWithLine,
   diagram,
   draw,
   horizontalChoice,
@@ -458,6 +493,7 @@ export {
   repeater,
   sequence,
   skip,
+  special,
   stack,
   terminal,
 };
