@@ -2,21 +2,39 @@
   "name": "ascii-railroad",
   "version": "1.0.0",
   "description": "ascii railroad diagrams",
-  "main": "index.js",
+  "main": "ascii-diagram.js",
+  "types": "ascii-diagram.d.ts",
   "author": "Matthijs Groen <matthijs.groen@gmail.com>",
   "license": "MIT",
   "private": false,
   "devDependencies": {
     "@types/jest": "^26.0.14",
+    "@typescript-eslint/parser": "4.4.1",
     "eslint": "^7.11.0",
     "jest": "^26.5.3",
     "prettier": "^2.1.2",
+    "eslint-plugin-prettier": "3.1.4",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   },
+  "files": [
+    "ascii-diagram.js",
+    "ascii-diagram.d.ts",
+    "README.md"
+  ],
   "scripts": {
-    "start": "ts-node index.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc -b tsconfig.json",
+    "lint": "eslint --ext \".ts\" **/*.ts"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
   }
 }

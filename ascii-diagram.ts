@@ -74,14 +74,14 @@ const diagram = (element: DiagramElement, complex = false): DiagramElement => ({
 
 const sequence = (elements: DiagramElement[]): DiagramElement => ({
   items: elements,
-  up: Math.max(...elements.map(e => e.up)),
-  down: Math.max(...elements.map(e => e.down)),
+  up: Math.max(...elements.map((e) => e.up)),
+  down: Math.max(...elements.map((e) => e.down)),
   height: 0,
   width: elements.reduce((acc, element) => acc + element.width + 1, 1),
   draw: (plotter, start) => {
     plotter(start.x, start.y, s.h);
     let xDelta = 1;
-    elements.forEach(element => {
+    elements.forEach((element) => {
       element.draw(plotter, delta(start, xDelta));
       xDelta += element.width;
       if (element.height === 0) {
@@ -131,6 +131,9 @@ const choice = (
   elements: DiagramElement[],
   defaultChoice = 0
 ): DiagramElement => {
+  if (elements.length === 1) {
+    return elements[0];
+  }
   const up = elements.reduce(
     (acc, element, i) =>
       i === defaultChoice
@@ -150,13 +153,14 @@ const choice = (
     0
   );
 
-  const width = Math.max(...elements.map(e => e.width));
+  const width = Math.max(...elements.map((e) => e.width));
+  const height = elements[defaultChoice].height;
 
   return {
     items: elements,
     up,
-    down,
-    height: 0,
+    down: down - height,
+    height,
     width: width + 2,
     draw: (plotter, start) => {
       let yDelta = -up;
@@ -227,12 +231,7 @@ const choice = (
           width
         );
 
-        yDelta += element.height + element.down;
-        if (l[i + i]) {
-          yDelta += l[i + i].up;
-        }
-
-        yDelta += 1;
+        yDelta += element.height + element.down + +element.up + 1;
       });
     },
   };
@@ -252,7 +251,7 @@ const stack = (elements: DiagramElement[]): DiagramElement => {
     elements.length - 2
   );
 
-  const width = Math.max(...elements.map(e => e.width));
+  const width = Math.max(...elements.map((e) => e.width));
 
   return {
     items: elements,
@@ -436,14 +435,14 @@ const draw = (element: DiagramElement) => {
 
   for (let y = minY; y <= maxY; y++) {
     for (let x = minX; x <= maxX; x++) {
-      const point = points.find(e => e.x === x && e.y === y);
+      const point = points.find((e) => e.x === x && e.y === y);
       if (point) {
         canvas[y - minY][x - minX] = point.char;
       }
     }
   }
 
-  return canvas.map(l => l.join("")).join("\n");
+  return canvas.map((l) => l.join("")).join("\n");
 };
 
 export {
