@@ -72,9 +72,9 @@ const comment = (comment: string): DiagramElement => ({
   up: 0,
   down: 0,
   height: 0,
-  width: comment.length + 4,
+  width: comment.length + 2,
   draw: (plotter, start) => {
-    drawLine(plotter, start, `─ ${comment} ─`);
+    drawLine(plotter, start, `╴${comment}╶`);
   },
 });
 
@@ -88,6 +88,66 @@ const commentWithLine = (comment: string): DiagramElement => ({
     drawLine(plotter, start, "─".repeat(comment.length + 2));
   },
 });
+
+const alignWidth = (
+  plotter: Plotter,
+  element: DiagramElement,
+  { x, y }: Coord,
+  width: number
+) => {
+  const remainingWidth = width - element.width;
+  const left = Math.floor(remainingWidth / 2);
+  const right = remainingWidth - left;
+  element.draw(plotter, { x: x + left, y });
+
+  for (let l = 0; l < left; l++) {
+    plotter(x + l, y, s.h);
+  }
+  for (let r = 0; r < right; r++) {
+    plotter(x + left + element.width + r, y + element.height, s.h);
+  }
+};
+
+const group = (element: DiagramElement, label = ""): DiagramElement => {
+  const width = Math.max(element.width, label.length + 2);
+  return {
+    up: element.up + 1,
+    down: element.down + 1,
+    height: element.height,
+    width: width + 2,
+    draw: (plotter, start) => {
+      plotter(start.x, start.y - element.up - 1, s.tl);
+      if (label.length > 0) {
+        comment(label).draw(plotter, delta(start, 1, -1 - element.up));
+      }
+      drawLine(
+        plotter,
+        delta(start, 1, -1 - element.up),
+        `${"╌".repeat(width)}╮`
+      );
+      for (let y = 1; y <= element.up; y++) {
+        plotter(start.x, start.y - y, "╎");
+      }
+      plotter(start.x, start.y, "┼");
+      for (let y = 1; y <= element.down + element.height; y++) {
+        plotter(start.x, start.y + y, "╎");
+      }
+      alignWidth(plotter, element, delta(start, 1, 0), width);
+      for (let y = 1; y <= element.up + element.height; y++) {
+        plotter(start.x + width + 1, start.y + element.height - y, "╎");
+      }
+      plotter(start.x + width + 1, start.y + element.height, "┼");
+      for (let y = 1; y <= element.down; y++) {
+        plotter(start.x + width + 1, start.y + element.height + y, "╎");
+      }
+      drawLine(
+        plotter,
+        delta(start, 0, 1 + element.down + element.height),
+        `╰${"╌".repeat(width)}╯`
+      );
+    },
+  };
+};
 
 const diagram = (element: DiagramElement, complex = false): DiagramElement => ({
   up: 0 + element.up,
@@ -130,25 +190,6 @@ const sequence = (elements: DiagramElement[]): DiagramElement => ({
     });
   },
 });
-
-const alignWidth = (
-  plotter: Plotter,
-  element: DiagramElement,
-  { x, y }: Coord,
-  width: number
-) => {
-  const remainingWidth = width - element.width;
-  const left = Math.floor(remainingWidth / 2);
-  const right = remainingWidth - left;
-  element.draw(plotter, { x: x + left, y });
-
-  for (let l = 0; l < left; l++) {
-    plotter(x + l, y, s.h);
-  }
-  for (let r = 0; r < right; r++) {
-    plotter(x + left + element.width + r, y + element.height, s.h);
-  }
-};
 
 const skip = (content = ""): DiagramElement => ({
   up: 0,
@@ -487,6 +528,7 @@ export {
   commentWithLine,
   diagram,
   draw,
+  group,
   horizontalChoice,
   nonTerminal,
   optional,

@@ -4,7 +4,7 @@ describe("comment", () => {
   it("renders text", () => {
     // prettier-ignore
     expect(draw(comment("hello"))).toEqual([
-      "─ hello ─", 
+      "╴hello╶", 
     ].join("\n"));
   });
 });
