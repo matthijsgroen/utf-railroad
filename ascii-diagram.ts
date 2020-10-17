@@ -319,6 +319,9 @@ const repeater = (repeat: DiagramElement, inBetween = skip()): DiagramElement =>
   choice([repeat, sequence([inBetween, skip(s.left)])]);
 
 const horizontalChoice = (elements: DiagramElement[]): DiagramElement => {
+  if (elements.length === 1) {
+    return elements[0];
+  }
   const up = elements.reduce(
     (acc, element) => (element.up > acc ? element.up : acc),
     -Infinity
