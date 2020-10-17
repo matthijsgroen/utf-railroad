@@ -1,9 +1,20 @@
-const drawLine = (plotter, { x, y }, text) =>
+type Plotter = (x: number, y: number, char: string) => void;
+type Coord = { x: number; y: number };
+type DiagramElement = {
+  items?: DiagramElement[];
+  up: number;
+  down: number;
+  height: number;
+  width: number;
+  draw(plotter: Plotter, start: Coord): void;
+};
+
+const drawLine = (plotter: Plotter, { x, y }: Coord, text: string) =>
   [...text].forEach((char, i) => plotter(x + i, y, char));
 
-const delta = ({ x, y }, xDelta = 0, yDelta = 0) => ({
+const delta = ({ x, y }: Coord, xDelta = 0, yDelta = 0): Coord => ({
   x: x + xDelta,
-  y: y + yDelta
+  y: y + yDelta,
 });
 
 const s = {
@@ -18,10 +29,10 @@ const s = {
   bl: "╰",
   br: "╯",
   right: "→",
-  left: "←"
+  left: "←",
 };
 
-const terminal = name => ({
+const terminal = (name: string): DiagramElement => ({
   up: 1,
   down: 1,
   height: 0,
@@ -30,10 +41,10 @@ const terminal = name => ({
     drawLine(plotter, delta(start, 0, -1), `╭${"─".repeat(name.length + 2)}╮`);
     drawLine(plotter, start, `┤ ${name} ├`);
     drawLine(plotter, delta(start, 0, 1), `╰${"─".repeat(name.length + 2)}╯`);
-  }
+  },
 });
 
-const nonTerminal = name => ({
+const nonTerminal = (name: string): DiagramElement => ({
   up: 1,
   down: 1,
   height: 0,
@@ -42,10 +53,10 @@ const nonTerminal = name => ({
     drawLine(plotter, delta(start, 0, -1), `┏${"━".repeat(name.length + 2)}┓`);
     drawLine(plotter, start, `┨ ${name} ┠`);
     drawLine(plotter, delta(start, 0, 1), `┗${"━".repeat(name.length + 2)}┛`);
-  }
+  },
 });
 
-const diagram = (element, complex = false) => ({
+const diagram = (element: DiagramElement, complex = false): DiagramElement => ({
   up: 0 + element.up,
   down: 0 + element.down + element.height,
   height: element.height,
@@ -58,10 +69,11 @@ const diagram = (element, complex = false) => ({
       complex ? "╢" : "┨"
     );
     element.draw(plotter, delta(start, 1));
-  }
+  },
 });
 
-const sequence = elements => ({
+const sequence = (elements: DiagramElement[]): DiagramElement => ({
+  items: elements,
   up: Math.max(...elements.map(e => e.up)),
   down: Math.max(...elements.map(e => e.down)),
   height: 0,
@@ -83,10 +95,15 @@ const sequence = elements => ({
       }
       xDelta += 1;
     });
-  }
+  },
 });
 
-const alignWidth = (plotter, element, { x, y }, width) => {
+const alignWidth = (
+  plotter: Plotter,
+  element: DiagramElement,
+  { x, y }: Coord,
+  width: number
+) => {
   const remainingWidth = width - element.width;
   const left = Math.floor(remainingWidth / 2);
   const right = remainingWidth - left;
@@ -100,17 +117,20 @@ const alignWidth = (plotter, element, { x, y }, width) => {
   }
 };
 
-const skip = (content = "") => ({
+const skip = (content = ""): DiagramElement => ({
   up: 0,
   down: 0,
   height: 0,
   width: content.length,
   draw: (plotter, start) => {
     drawLine(plotter, start, content);
-  }
+  },
 });
 
-const choice = (elements, defaultChoice = 0) => {
+const choice = (
+  elements: DiagramElement[],
+  defaultChoice = 0
+): DiagramElement => {
   const up = elements.reduce(
     (acc, element, i) =>
       i === defaultChoice
@@ -133,6 +153,7 @@ const choice = (elements, defaultChoice = 0) => {
   const width = Math.max(...elements.map(e => e.width));
 
   return {
+    items: elements,
     up,
     down,
     height: 0,
@@ -213,13 +234,14 @@ const choice = (elements, defaultChoice = 0) => {
 
         yDelta += 1;
       });
-    }
+    },
   };
 };
 
-const optional = element => choice([skip(s.right), element], 1);
+const optional = (element: DiagramElement): DiagramElement =>
+  choice([skip(s.right), element], 1);
 
-const stack = elements => {
+const stack = (elements: DiagramElement[]): DiagramElement => {
   const up = elements[0].up;
   const down = elements[elements.length - 1].down;
   const height = elements.reduce(
@@ -233,6 +255,7 @@ const stack = elements => {
   const width = Math.max(...elements.map(e => e.width));
 
   return {
+    items: elements,
     up,
     down,
     height,
@@ -289,14 +312,14 @@ const stack = elements => {
         yDelta += element.up + element.height + 2 + element.down;
       });
       plotter(start.x + width + 1, start.y + height, s.h);
-    }
+    },
   };
 };
 
-const repeater = (repeat, inBetween = skip()) =>
+const repeater = (repeat: DiagramElement, inBetween = skip()): DiagramElement =>
   choice([repeat, sequence([inBetween, skip(s.left)])]);
 
-const horizontalChoice = elements => {
+const horizontalChoice = (elements: DiagramElement[]): DiagramElement => {
   const up = elements.reduce(
     (acc, element) => (element.up > acc ? element.up : acc),
     -Infinity
@@ -311,6 +334,7 @@ const horizontalChoice = elements => {
   const width = elements.reduce((acc, element) => acc + element.width + 2, 0);
 
   return {
+    items: elements,
     up,
     down,
     height: 0,
@@ -372,14 +396,15 @@ const horizontalChoice = elements => {
         }
         xDelta += 2;
       });
-    }
+    },
   };
 };
 
-const draw = element => {
+const draw = (element: DiagramElement) => {
+  type Point = { x: number; y: number; char: string };
   // determine width / height
-  const points = [];
-  const plotter = (x, y, char) => {
+  const points: Point[] = [];
+  const plotter: Plotter = (x, y, char) => {
     points.push({ x, y, char });
   };
 
@@ -421,7 +446,7 @@ const draw = element => {
   return canvas.map(l => l.join("")).join("\n");
 };
 
-module.exports = {
+export {
   choice,
   diagram,
   draw,
@@ -432,5 +457,5 @@ module.exports = {
   sequence,
   skip,
   stack,
-  terminal
+  terminal,
 };

@@ -1,4 +1,4 @@
-const {
+import {
   choice,
   diagram,
   draw,
@@ -8,8 +8,8 @@ const {
   repeater,
   sequence,
   stack,
-  terminal
-} = require("./ascii-diagram");
+  terminal,
+} from "./ascii-diagram";
 
 console.log(
   draw(
@@ -23,14 +23,14 @@ console.log(
             1
           ),
           terminal("how are you?"),
-          optional(terminal("how are you?"))
+          optional(terminal("how are you?")),
         ]),
         repeater(terminal("qux")),
         horizontalChoice([
           terminal("a"),
           stack([terminal("b"), terminal("1")]),
-          terminal("c")
-        ])
+          terminal("c"),
+        ]),
       ]),
       true
     )
