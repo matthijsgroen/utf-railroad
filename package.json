@@ -24,6 +24,7 @@
     "README.md"
   ],
   "scripts": {
+    "start": "ts-node examples/json.ts",
     "test": "jest",
     "build": "tsc -b tsconfig.json",
     "lint": "eslint --ext \".ts\" **/*.ts"
