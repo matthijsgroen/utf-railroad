@@ -1,3 +1,6 @@
+[![npm](https://badgen.now.sh/npm/v/utf-railroad?icon=npm)](http://npm.im/utf-railroad)
+[![license](https://badgen.now.sh/github/license/matthijsgroen/utf-railroad)](https://github.com/matthijsgroen/utf-railroad)
+
 # UTF Railroad
 
 Draw railroad diagrams using UTF-8 characters.

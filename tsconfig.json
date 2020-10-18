@@ -20,7 +20,6 @@
     "sourceRoot": "./utf-railroad.ts",
     "baseUrl": "./",
     "esModuleInterop": true,
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
   "files": ["utf-railroad.ts"]

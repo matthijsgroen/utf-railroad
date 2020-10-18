@@ -1,10 +1,12 @@
 {
   "name": "utf-railroad",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "utf railroad diagrams",
   "main": "utf-railroad.js",
   "types": "utf-railroad.d.ts",
   "author": "Matthijs Groen <matthijs.groen@gmail.com>",
+  "homepage": "https://github.com/matthijsgroen/utf-railroad",
+  "keywords": ["utf-8", "ascii", "railroad", "diagrams"],
   "license": "MIT",
   "private": false,
   "devDependencies": {
